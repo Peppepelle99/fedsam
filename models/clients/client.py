@@ -27,7 +27,7 @@ class Client:
         self.device = device
         self.lr = lr
         self.weight_decay = weight_decay
-        self.momentum = momentum
+        self.momentum = 0.9
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.run = run
