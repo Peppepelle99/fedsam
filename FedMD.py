@@ -123,9 +123,7 @@ class FedMD():
               
               #remove last layer
             model_A = deepcopy(model_A_twin)
-            model_A.classifier = nn.Sequential(*(list(model_A_twin.children())[:-1]))
-            print(f"modello con ultimo layer tolto: {model_A}")
-              
+            del model_A.linear
             self.collaborative_parties.append({"model_logits": model_A, 
                                               "model_classifier": model_A_twin,
                                               "model_weights": model_A.state_dict()})
