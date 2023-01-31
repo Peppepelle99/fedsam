@@ -249,7 +249,6 @@ def train_models(models, X_train, y_train, X_test, y_test,
     for n, model in enumerate(models):
         print("Training model ", n)
         if early_stopping:
-            print(f"nome modello = {model.__class__.__name__}")
             if model.__class__.__name__ == "Resnet20":
                 train_accuracies, train_losses, val_accuracies, val_losses = train_resnet20(model, trainset, validset, testset, epochs = epochs, batch_size= batch_size)
             else:

@@ -22,7 +22,7 @@ Algoritmo FedMD:
 
 def get_prediction_on_train(resnet20, alignment_data, batch_size=32):
   dataloader = DataLoader(alignment_data, batch_size=batch_size, shuffle=False, num_workers=2)
-  print(f"dataloader = {dataloader}")
+  #print(f"dataloader = {dataloader}")
   net = resnet20.to('cuda') # this will bring the network to GPU if DEVICE is cuda
   net.train(False) # Set Network to evaluation mode
 
@@ -44,7 +44,7 @@ def get_prediction_on_train(resnet20, alignment_data, batch_size=32):
 
 def get_prediction_on_testing(resnet20, alignment_data, batch_size=32):
   dataloader = DataLoader(alignment_data, batch_size=batch_size, shuffle=False, num_workers=2)
-  print(f"dataloader = {dataloader}")
+  #print(f"dataloader = {dataloader}")
   net = resnet20.to('cuda') # this will bring the network to GPU if DEVICE is cuda
   net.train(False) # Set Network to evaluation mode
 
@@ -96,11 +96,11 @@ class FedMD():
           model_A_twin = None
           model_A_twin = deepcopy(parties[i])
           print(f"parties = {i}")
-          print(f"model = {model_A_twin.__class__.__name__}")
+          #print(f"model = {model_A_twin.__class__.__name__}")
 
           if model_A_twin.__class__.__name__ == "Resnet20":
 
-            print(f' {np.shape(private_data[0]["X"])}') #(120,32,32,3)
+            #print(f' {np.shape(private_data[0]["X"])}') #(120,32,32,3)
             trainset = []
             for i, img in enumerate(private_data[0]["X"]):
               convert_tensor = transforms.ToTensor()
@@ -123,8 +123,8 @@ class FedMD():
               
               #remove last layer
             model_A = deepcopy(model_A_twin)
-            model_A = nn.Sequential(*(list(model_A_twin.children())[:-1]))
-              # print(f"modello con ultimo layer tolto: {model_A}")
+            model_A.classifier = nn.Sequential(*(list(model_A_twin.children())[:-1]))
+            print(f"modello con ultimo layer tolto: {model_A}")
               
             self.collaborative_parties.append({"model_logits": model_A, 
                                               "model_classifier": model_A_twin,
@@ -137,13 +137,13 @@ class FedMD():
           else: 
             model_A_twin = None
             model_A_twin = clone_model(parties[i])
-            print("set weights")
+            #print("set weights")
             model_A_twin.set_weights(parties[i].get_weights())
-            print("compile")
+            #print("compile")
             model_A_twin.compile(optimizer=tf.keras.optimizers.Adam(learning_rate = 1e-3), 
                                   loss = "sparse_categorical_crossentropy",
                                   metrics = ["accuracy"])
-            print("fit")
+            #print("fit")
             model_A_twin.fit(private_data[i]["X"], private_data[i]["y"],
                               batch_size = 32, epochs = 25, shuffle=True, verbose = 0,
                               validation_data = [private_test_data["X"], private_test_data["y"]],
