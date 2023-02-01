@@ -1,7 +1,7 @@
 """Library of routines."""
 
 from inversefed import nn
-from inversefed.nn import construct_model, MetaMonkey
+from inversefed.nn import MetaMonkey
 
 from inversefed.data import construct_dataloaders
 from inversefed.training import train
@@ -16,5 +16,5 @@ from .options import options
 from inversefed import metrics
 
 __all__ = ['train', 'construct_dataloaders', 'construct_model', 'MetaMonkey',
-           'training_strategy', 'nn', 'utils', 'options',
+           'training_strategy', 'utils', 'options',
            'metrics', 'GradientReconstructor', 'FedAvgReconstructor']
