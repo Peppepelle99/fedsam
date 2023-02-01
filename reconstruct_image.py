@@ -118,7 +118,7 @@ if __name__ == "__main__":
             lr_decay=True,
             scoring_choice="loss",
         )
-        
+
     elif args.optim == "zhu":
         config = dict(
             signed=False,
@@ -153,7 +153,7 @@ if __name__ == "__main__":
         output_denormalized = torch.clamp(output * ds + dm, 0, 1)
         rec_filename = (
             f'{validloader.dataset.classes[labels][0]}_{"trained" if args.trained_model else ""}'
-            f"{args.model}_{args.cost_fn}-{args.target_id}.png"
+            f"res20_{args.cost_fn}-{args.target_id}.png"
         )
         torchvision.utils.save_image(output_denormalized, os.path.join(args.image_path, rec_filename))
 
@@ -171,7 +171,7 @@ if __name__ == "__main__":
         args.table_path,
         name=f"exp_{args.name}",
         dryrun=args.dryrun,
-        model=args.model,
+        model="res20",
         dataset=args.dataset,
         trained=args.trained_model,
         accumulation=args.accumulation,
