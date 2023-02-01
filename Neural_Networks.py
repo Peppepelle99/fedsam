@@ -105,8 +105,11 @@ class Resnet20(nn.Module):
 
         out = torch.nn.functional.avg_pool2d(out, out.size()[3])
         out = out.view(out.size(0), -1)
-        if self.linear:
+        try:
             out = self.linear(out)
+        except:
+            out = out
+            
         return out
       
     def model_size(self):
