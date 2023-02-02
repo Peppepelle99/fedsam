@@ -4,10 +4,11 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 from PIL import Image
 from models.cifar100.resnet20 import ClientModel as res20
+from train_resnet20 import evaluate
 import inversefed
 
 num_images = 1
-trained_model = False
+trained_model = True
 
 
 setup = inversefed.utils.system_startup()
@@ -15,17 +16,17 @@ defs = inversefed.training_strategy('conservative')
 
 loss_fn, trainloader, validloader =  inversefed.construct_dataloaders('CIFAR100', defs)
 
-model = res20(lr=0.1, num_classes=10, device='cuda')
+model = res20(lr=0.1, num_classes=100, device='cuda')
 model.to(**setup)
 if trained_model:
-    epochs = 120
-    file = f'checkpoint.pth'
-    try:
-        model.load_state_dict(torch.load(f'models/{file}'))
-    except FileNotFoundError:
-        inversefed.train(model, loss_fn, trainloader, validloader, defs, setup=setup)
-        torch.save(model.state_dict(), f'models/{file}')
+    checkpoint = torch.load('./checkpoint')
+    model.load_state_dict(checkpoint['model_state_dict'])
+
 model.eval();
+
+accuracy = evaluate(model, validloader)[0]
+print('\nTest Accuracy: {}'.format(accuracy))
+
 
 dm = torch.as_tensor(inversefed.consts.cifar10_mean, **setup)[:, None, None]
 ds = torch.as_tensor(inversefed.consts.cifar10_std, **setup)[:, None, None]
